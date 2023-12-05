@@ -1,4 +1,4 @@
-# ADVENT OF CODE 2032
+# ADVENT OF CODE 2023
 
 Hey, this is what I've done for the 2023 edition of the [Advent of code](https://adventofcode.com)
 
