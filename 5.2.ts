@@ -19,17 +19,35 @@ const ORDER = [
   CATEGORIES.HUMIDITY,
   CATEGORIES.LOCATION,
 ];
-// ECHO TODO : won't work because way too much seeds => gotta look for optimisation
-const getSeeds = (seeds: number[]) => {
-  const finalSeeds = [];
-  for (let seed = 0; seed < seeds.length; seed += 2) {
-    const [from, n] = [seeds[seed], seeds[seed + 1]];
-    finalSeeds.push(...new Array(n).fill(0).map((_, i) => i + from));
+/**
+ * 3 possibilities :
+ *  =>
+ *
+ *  =>
+ *  =>
+ * @param seeds
+ * @param block
+ */
+const filter = (
+  seeds: [number, number][],
+  block: [number, number, number],
+): [number, number][] => {
+  const newSeeds: [number, number][] = [];
+  for (const array of seeds) {
+    const result = [];
+    const blockRemoving = [block[1], block[1] + block[2]];
+    const blockAdding = [block[0], block[0] + block[2]];
+    // echo todo : check what parts of adding actually gets added, then delete all removing parts
   }
-  return finalSeeds;
+  return newSeeds.filter(a => a[0] < a[1]).sort(([a], [b]) => a - b);
 };
 
-const parse = (input: string) => {
+const filterAll = (
+  seeds: [number, number][],
+  blocks: [number, number, number][],
+): [number, number][] => blocks.reduce((acc, cur) => filter(acc, cur), seeds);
+
+const parse = (input: string): [number[], Record<string, number[][]>] => {
   const [seeds, sts, stf, ftw, wtl, ltt, tth, htl] = input.split('\n\n');
   const cats: Record<string, number[][]> = {};
   for (const [block, categories] of [
@@ -46,7 +64,7 @@ const parse = (input: string) => {
       .slice(1)
       .map(row => row.split(' ').map(Number));
   }
-  return [getSeeds(seeds.split(': ')[1].split(' ').map(Number)), cats];
+  return [seeds.split(': ')[1].split(' ').map(Number), cats];
 };
 
 const getOutput = (id: number, mappings: [number, number, number][]) => {
@@ -58,18 +76,11 @@ const getOutput = (id: number, mappings: [number, number, number][]) => {
   return id;
 };
 
-export const solve = (input: string) => {
-  let min: number = Infinity;
-  const [seeds, maps] = parse(input);
-  for (const seed of seeds as number[]) {
-    let current = seed;
-    for (let x = 0, y = 1; y < ORDER.length; x++, y++) {
-      const from = ORDER[x];
-      const to = ORDER[y];
+/**
+ * IDEA : find the smallest location possible for which a seed exists.
+ */
 
-      current = getOutput(current, maps[[from, to].join('_')]);
-    }
-    min = Math.min(current, min);
-  }
-  console.log(min);
+export const solve = (input: string) => {
+  const [seeds, maps] = parse(input);
+  console.log(seeds, maps);
 };
