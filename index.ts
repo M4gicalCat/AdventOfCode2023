@@ -1,6 +1,6 @@
 import input from './input';
 
-const DAY = 6;
+const DAY = 7;
 const PUZZLE = 2;
 
 // @ts-ignore
